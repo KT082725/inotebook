@@ -23,13 +23,15 @@ router.post(
   fetchuser,
   [
     query("title", "Enter a valid title").isLength({ min:3 }),
-    query("description", "Description must be atleast 5 characters.").isLength({min:5})
+    query("description", "Description must be atleast 5 characters.").isLength({min:5}),
+    query("tag", "Tag must be atleast 5 characters.").isLength({min:5})
   ],
   async (req, res) => {
+    try{
       const { title, description, tag } = req.body;
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        console.log(title)
+      if (errors.isEmpty()) {
+        console.log(errors.array())
         return res.status(400).json({ errors: errors.array() });
       }
       else{const note = new Note({
@@ -39,13 +41,13 @@ router.post(
         user: req.user.id,
       });
       const savedNote = await note.save();
-      res.json(savedNote);
-    // } catch (error) {
-    //   console.error(error.message);
-    //   res.status(500).send("Some Error Occured.");
-    // }
+      res.json(savedNote);}
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Some Error Occured.");
+    }
   
-    }});
+    });
 
     // Route3:Update an existing note using: Put "/api/notes/updatenote/:id". login required
     
