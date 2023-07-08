@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,props} from 'react'
 import { useNavigate } from 'react-router-dom';
 const Signup = () => {
     const [credentials,setCredentials]=useState({name:"",email:"",password:'',cpassword:""});
@@ -18,16 +18,18 @@ const Signup = () => {
           if(credentials.password===credentials.cpassword && json.success){
             localStorage.setItem('token',json.authToken);
             navigate("/");
+            props.showAlert("Succesfully Loged in","success")
           }
           else{
-            alert("Some error occured")
+            props.showAlert("Invalid Credentials","danger")
           }
     }
     const onChange=(e)=>{
         setCredentials({...credentials,[e.target.name]:e.target.value})
     } 
   return (
-    <div>
+    <div className='mt-2'>
+      <h2>Create a new user to use iNotebook</h2>
        <form onSubmit={handleSubmit}>
   <div className="form-group">
   <div className="form-group">
