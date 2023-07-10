@@ -2,18 +2,21 @@ import React, { useContext,useEffect,useRef,useState } from 'react'
 import noteContext from "../context/notes/noteContext"
 import NoteItem from './Noteitem'
 import Addnote from './Addnote';
+import alertContext from '../context/alertContext';
 import {  useNavigate,useLocation } from 'react-router-dom';
 
-const Notes = (props) => {
+const Notes = () => {
   const location = useLocation();
   let navigate=useNavigate();
     const context=useContext(noteContext);
+    const aContext=useContext(alertContext);
+    const {showAlert}=aContext;
     const {notes,getNote,editNote}=context;
     const  nav=()=>{
       navigate('/login')
     }
     useEffect(()=>{
-      if(!localStorage.getItem('token')&& location.pathname !== '/login'){nav();props.showAlert("Please Login First","danger")}
+      if(!localStorage.getItem('token')&& location.pathname !== '/login'){nav();showAlert("Please Login First","danger")}
       else{getNote()}
       
       }
@@ -26,19 +29,28 @@ const updateNote=(currentNote)=>{
   ref.current.click();
   setNote({id:currentNote._id,etitle:currentNote.title,edescription:currentNote.description,etag:currentNote.tag});
 }
-
 const [note,setNote]=useState({id:"",etitle:"",edescription:"",etag:""})
 const handleOnClick=()=>{
   editNote(note.id,note.etitle,note.edescription,note.etag)
     refClose.current.click();
-    props.showAlert("Deleted note succesfully","success")
+    showAlert("Deleted note succesfully","success")
 }
 const onChange=(e)=>{
-    setNote({...note,[e.target.name]:e.target.value})
+  // setNote({...note,[e.target.name]:e.target.value}) cwh
+  //Angela Yu
+  const {name,value}=e.target;
+  setNote((prevaval)=>{
+    return{
+    ...prevaval,
+    [name]:value
+    }
+  }
+  )
+    
 } 
   return (
     <>
-    <Addnote showAlert={props.showAlert}/>
+    <Addnote/>
     {/* <!-- Button trigger modal --> */}
 <button type="button" ref={ref} className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
   Launch demo modal
@@ -83,7 +95,7 @@ const onChange=(e)=>{
       <div className='container'>
       {notes.length===0 && "No notes to display"}</div>
       {notes.map((note)=>{
-    return <NoteItem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note}/>})}
+    return <NoteItem key={note._id} updateNote={updateNote}  note={note}/>})}
     </div>
   </>
 

@@ -1,8 +1,11 @@
-import React,{useState,props} from 'react'
+import React,{useState,useContext} from 'react'
 import { useNavigate } from 'react-router-dom';
+import alertContext from '../context/alertContext';
 const Signup = () => {
     const [credentials,setCredentials]=useState({name:"",email:"",password:'',cpassword:""});
     let navigate=useNavigate();
+    const aContext=useContext(alertContext);
+    const {showAlert}=aContext;
     const handleSubmit=async(e)=>{
         e.preventDefault();
         const response = await fetch("http://localhost:5000/api/auth/createuser", {
@@ -18,10 +21,10 @@ const Signup = () => {
           if(credentials.password===credentials.cpassword && json.success){
             localStorage.setItem('token',json.authToken);
             navigate("/");
-            props.showAlert("Succesfully Loged in","success")
+            showAlert("Succesfully Loged in","success")
           }
           else{
-            props.showAlert("Invalid Credentials","danger")
+            showAlert("Invalid Credentials","danger")
           }
     }
     const onChange=(e)=>{
