@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-const Signup = () => {
+const Signup = (props) => {
     const [credentials,setCredentials]=useState({name:"",email:"",password:'',cpassword:""});
     let navigate=useNavigate();
     const handleSubmit=async(e)=>{
