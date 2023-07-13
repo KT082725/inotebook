@@ -1,4 +1,4 @@
-import React,{useState,props} from 'react'
+import React,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 const Signup = () => {
     const [credentials,setCredentials]=useState({name:"",email:"",password:'',cpassword:""});
